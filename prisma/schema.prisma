@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String  @id @default(cuid()) // Clerk user ID
+  email     String  @unique
+  fullName  String
+  avatarUrl String? // Optional profile picture
+
+  requests InspectionRequest[] // One-to-many relation with InspectionRequest
+  offers   Offer[] // One-to-many relation with Offer
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model InspectionRequest {
+  id     String @id @default(cuid())
+  userId String // User who created the request
+  user   User   @relation(fields: [userId], references: [id])
+
+  location String // Address or general location
+  dateTime DateTime // Exact date and time of the inspection
+  price    Float // Minimum price for the offer
+
+  latitude  Float? // Latitude for the location
+  longitude Float? // Longitude for the location
+
+  offers Offer[] // Offers made for this inspection
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Offer {
+  id     String @id @default(cuid())
+  userId String // User who made the offer
+  user   User   @relation(fields: [userId], references: [id])
+
+  inspectionRequestId String // The inspection request the offer is for
+  inspectionRequest   InspectionRequest @relation(fields: [inspectionRequestId], references: [id])
+
+  price   Float // Offered price
+  message String? // Optional message with the offer
+  status  OfferStatus @default(PENDING) // Status of the offer
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OfferStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
