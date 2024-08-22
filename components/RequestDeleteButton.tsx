@@ -25,7 +25,7 @@ export function RequestDeleteButton({ requestId }: { requestId: string }) {
     const result = await deleteInspectionRequest(requestId);
     if (result.success) {
       toast.success(result.message);
-      router.push("/");
+      router.push("/request/my-requests");
     } else {
       toast.error(result.error);
     }
