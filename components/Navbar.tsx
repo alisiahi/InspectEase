@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import { Button } from "./ui/button";
 
 export function Navbar() {
+  const { userId } = auth();
   return (
     <nav className="shadow-md shadow-indigo-600">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -34,7 +37,18 @@ export function Navbar() {
             </div>
           </div>
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            <UserButton />
+            {userId ? (
+              <UserButton />
+            ) : (
+              <div className="flex items-center justify-center gap-2">
+                <Button variant="secondary" asChild>
+                  <Link href="/sign-in">Sign in</Link>
+                </Button>
+                <Button variant="outline" asChild>
+                  <Link href="/sign-up">Sign up</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>

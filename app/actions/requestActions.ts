@@ -191,7 +191,6 @@ export async function getAllRequests() {
 }
 
 // Getting all of the requests of the user
-
 export async function getUserRequests() {
   const { userId } = auth();
 
