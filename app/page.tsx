@@ -12,7 +12,7 @@ export default async function Home() {
         <div className="px-4 py-6 sm:px-0">
           <div className="overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
-              <h1 className="text-2xl font-semibold text-indigo-600 mb-4">
+              <h1 className="text-2xl font-semibold text-primary mb-4">
                 Welcome to InspectEase
               </h1>
               {user ? (

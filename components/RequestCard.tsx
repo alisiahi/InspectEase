@@ -24,7 +24,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({
   requesterName,
 }) => {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm shadow-2xl shadow-primary/40 rounded-lg p-6 space-y-4 border-[1px] border-primary/40 border-dashed">
       <CardHeader>
         <CardTitle>{location}</CardTitle>
       </CardHeader>

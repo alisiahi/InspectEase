@@ -9,6 +9,8 @@ export const inspectionRequestFormSchema = z.object({
     invalid_type_error: "Please enter a valid date.",
   }),
   price: z.number().positive("Price must be greater than 0."),
+  latitude: z.number(),
+  longitude: z.number(),
 });
 
 export type InspectionRequestFormSchemaDataType = z.infer<

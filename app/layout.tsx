@@ -5,6 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/Navbar";
+import DebugTheme from "@/components/DebugTheme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,10 +23,15 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={inter.className}>
-          <ThemeProvider attribute="class" defaultTheme="dark">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
             <Navbar />
             <main>{children}</main>
-            <Toaster position="top-center" richColors theme="dark" />
+            <Toaster position="top-center" richColors theme="light" />
           </ThemeProvider>
         </body>
       </html>

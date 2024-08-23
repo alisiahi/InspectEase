@@ -3,8 +3,9 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -17,23 +18,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
+
 import {
   inspectionRequestFormSchema,
   InspectionRequestFormSchemaDataType,
 } from "@/lib/validation";
-import { cn } from "@/lib/utils";
+
 import {
   createInspectionRequest,
   updateInspectionRequest,
 } from "@/app/actions/requestActions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+import dynamic from "next/dynamic";
+
+const Map = dynamic(() => import("@/components/Map"), {
+  loading: () => <p>A map is loading</p>,
+  ssr: false,
+});
 
 interface InspectionRequestFormProps {
   mode: "create" | "edit";
@@ -54,10 +57,18 @@ export function InspectionRequestForm({
       location: "",
       date: new Date(),
       price: 0,
+      latitude: 0,
+      longitude: 0,
     },
   });
 
+  const handleLocationSelected = (lat: number, lng: number) => {
+    form.setValue("latitude", lat);
+    form.setValue("longitude", lng);
+  };
+
   async function onSubmit(values: InspectionRequestFormSchemaDataType) {
+    console.log("Form submitted with values:", values);
     try {
       let result;
       if (mode === "create") {
@@ -82,9 +93,40 @@ export function InspectionRequestForm({
       console.error("Error submitting form:", error);
     }
   }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        {/* Map Field */}
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Select Location on Map</FormLabel>
+              <FormControl>
+                <Map
+                  initialPosition={
+                    mode === "create"
+                      ? undefined
+                      : [
+                          form.getValues("latitude"),
+                          form.getValues("longitude"),
+                        ]
+                  }
+                  selectable={true}
+                  onLocationSelected={handleLocationSelected}
+                  showCurrentLocationMarker={true}
+                />
+              </FormControl>
+              <FormDescription>
+                Click on the map to select the location for inspection. Use the
+                button to center on your location.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         {/* Location Field */}
         <FormField
           control={form.control}
@@ -97,49 +139,6 @@ export function InspectionRequestForm({
               </FormControl>
               <FormDescription>
                 Enter the location of the property for inspection.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Date Picker Field */}
-        <FormField
-          control={form.control}
-          name="date"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Date</FormLabel>
-              <div className="">
-                <FormControl>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[280px] justify-start text-left font-normal",
-                          field.value ? "" : "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.value
-                          ? format(field.value, "PPP")
-                          : "Pick a date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={(date) => field.onChange(date)}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </FormControl>
-              </div>
-              <FormDescription>
-                Select the date for the inspection.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -167,6 +166,34 @@ export function InspectionRequestForm({
               </FormControl>
               <FormDescription>
                 Set the price you are willing to offer.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Date Picker Field */}
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Date and Time</FormLabel>
+              <div className="">
+                <FormControl>
+                  <DatePicker
+                    selected={field.value}
+                    onChange={(date) => field.onChange(date)}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    className="w-full p-2 border rounded react-datepicker-custom"
+                  />
+                </FormControl>
+              </div>
+              <FormDescription>
+                Select the date and time for the inspection.
               </FormDescription>
               <FormMessage />
             </FormItem>

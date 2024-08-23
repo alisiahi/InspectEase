@@ -31,6 +31,8 @@ export async function createInspectionRequest(
         location: data.location,
         dateTime: data.date,
         price: data.price,
+        latitude: data.latitude,
+        longitude: data.longitude,
       },
     });
 
@@ -113,6 +115,8 @@ export async function updateInspectionRequest(
         location: data.location,
         dateTime: data.date,
         price: data.price,
+        latitude: data.latitude,
+        longitude: data.longitude,
       },
     });
 
