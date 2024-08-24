@@ -63,7 +63,7 @@ export function Footer() {
         <Separator className="my-8" />
         <div className="text-center text-muted-foreground">
           <p>
-            &copy; {new Date().getFullYear()} InspecEase App. All rights
+            &copy; {new Date().getFullYear()} InspectEase App. All rights
             reserved.
           </p>
         </div>
