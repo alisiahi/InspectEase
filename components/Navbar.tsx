@@ -3,9 +3,34 @@ import { UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./theme-toggle";
+import { MobileMenu } from "./MobileMenu";
 
-export function Navbar() {
-  const { userId } = auth();
+const NavLinks = () => (
+  <>
+    <Link
+      href="/request/all"
+      className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+    >
+      All Requests
+    </Link>
+    <Link
+      href="/request/new"
+      className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+    >
+      Create a Request
+    </Link>
+    <Link
+      href="/request/my-requests"
+      className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+    >
+      My Requests
+    </Link>
+  </>
+);
+
+export async function Navbar() {
+  const { userId } = await auth();
+
   return (
     <nav className="shadow-md shadow-primary/40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,28 +41,11 @@ export function Navbar() {
                 InspectEase
               </Link>
             </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                href="/request/all"
-                className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                All Requests
-              </Link>
-              <Link
-                href="/request/new"
-                className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Create a Request
-              </Link>
-              <Link
-                href="/request/my-requests"
-                className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                My Requests
-              </Link>
+            <div className="hidden md:ml-6 md:flex md:space-x-8">
+              <NavLinks />
             </div>
           </div>
-          <div className="sm:ml-6 flex  items-center justify-center gap-2">
+          <div className="sm:ml-6 flex items-center justify-center gap-2">
             {userId ? (
               <UserButton />
             ) : (
@@ -51,6 +59,9 @@ export function Navbar() {
               </div>
             )}
             <ModeToggle />
+            <div className="md:hidden">
+              <MobileMenu />
+            </div>
           </div>
         </div>
       </div>
