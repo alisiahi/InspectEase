@@ -1,41 +1,49 @@
-// app/page.tsx
-
-import { currentUser } from "@clerk/nextjs/server";
-import { Navbar } from "@/components/Navbar";
+import { getAllRequests } from "@/app/actions/actions";
+import { RequestCard } from "@/components/RequestCard";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const user = await currentUser();
+  const result = await getAllRequests();
+
+  if (!result.success) {
+    console.log(`Error loading requests: ${result.error}`);
+    redirect("/");
+  }
+
+  const requests = result.data;
+
+  if (requests?.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">No Inspection Requests</h1>
+          <p className="text-gray-600">
+            There are currently no inspection requests available.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen">
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
-              <h1 className="text-2xl font-semibold text-primary mb-4">
-                Welcome to InspectEase
-              </h1>
-              {user ? (
-                <div>
-                  <p className="text-gray-600 mb-2">
-                    Logged in as:{" "}
-                    <span className="font-medium">
-                      {user.primaryEmailAddress?.emailAddress}
-                    </span>
-                  </p>
-                  <p className="text-gray-600">
-                    User ID: <span className="font-medium">{user.id}</span>
-                  </p>
-                </div>
-              ) : (
-                <p className="text-gray-600">
-                  Please sign in to access all features.
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
-      </main>
+    <div className="container mx-auto py-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {requests?.map((request) => (
+          <RequestCard
+            key={request.id}
+            id={request.id}
+            location={request.location}
+            dateTime={request.dateTime}
+            price={request.price}
+            requesterName={
+              request.user.fullName !== ""
+                ? request.user.fullName
+                : request.user.email
+            }
+            position={[request.latitude as number, request.longitude as number]}
+          />
+        ))}
+      </div>
     </div>
   );
 }

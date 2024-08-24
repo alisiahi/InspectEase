@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deleteInspectionRequest } from "@/app/actions/requestActions";
+import { deleteInspectionRequest } from "@/app/actions/actions";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -35,7 +35,9 @@ export function RequestDeleteButton({ requestId }: { requestId: string }) {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Delete Request</Button>
+        <Button className="bg-red-600 hover:bg-red-700 focus:ring-red-500 text-white border-transparent shadow-sm font-medium rounded-md px-4 py-2 text-sm">
+          Delete Request
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

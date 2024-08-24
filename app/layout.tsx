@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/Navbar";
 import DebugTheme from "@/components/DebugTheme";
+import { Footer } from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -36,7 +37,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <main>{children}</main>
+            <main className="min-h-screen">{children}</main>
+            <Footer />
             <Toaster position="top-center" richColors theme="light" />
           </ThemeProvider>
         </body>

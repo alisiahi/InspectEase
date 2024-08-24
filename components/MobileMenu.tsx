@@ -18,20 +18,11 @@ const NavLinks = ({ onClose }: { onClose: () => void }) => (
   <>
     <SheetClose asChild>
       <Link
-        href="/request/all"
-        className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium w-full"
-        onClick={onClose}
-      >
-        All Requests
-      </Link>
-    </SheetClose>
-    <SheetClose asChild>
-      <Link
         href="/request/new"
         className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium w-full"
         onClick={onClose}
       >
-        Create a Request
+        New Request
       </Link>
     </SheetClose>
     <SheetClose asChild>
@@ -41,6 +32,15 @@ const NavLinks = ({ onClose }: { onClose: () => void }) => (
         onClick={onClose}
       >
         My Requests
+      </Link>
+    </SheetClose>
+    <SheetClose asChild>
+      <Link
+        href="/my-missions"
+        className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium w-full"
+        onClick={onClose}
+      >
+        My Missions
       </Link>
     </SheetClose>
   </>

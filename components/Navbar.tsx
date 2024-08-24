@@ -8,16 +8,10 @@ import { MobileMenu } from "./MobileMenu";
 const NavLinks = () => (
   <>
     <Link
-      href="/request/all"
-      className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-    >
-      All Requests
-    </Link>
-    <Link
       href="/request/new"
       className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
     >
-      Create a Request
+      New Request
     </Link>
     <Link
       href="/request/my-requests"
@@ -25,11 +19,17 @@ const NavLinks = () => (
     >
       My Requests
     </Link>
+    <Link
+      href="/my-missions"
+      className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+    >
+      My Missions
+    </Link>
   </>
 );
 
-export async function Navbar() {
-  const { userId } = await auth();
+export function Navbar() {
+  const { userId } = auth();
 
   return (
     <nav className="shadow-md shadow-primary/40">

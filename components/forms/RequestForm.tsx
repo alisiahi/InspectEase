@@ -28,7 +28,7 @@ import {
 import {
   createInspectionRequest,
   updateInspectionRequest,
-} from "@/app/actions/requestActions";
+} from "@/app/actions/actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

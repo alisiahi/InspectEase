@@ -1,6 +1,6 @@
 // app/request/my-requests/page.tsx
 
-import { getUserRequests } from "@/app/actions/requestActions";
+import { getUserRequests } from "@/app/actions/actions";
 import { RequestCard } from "@/components/RequestCard";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";

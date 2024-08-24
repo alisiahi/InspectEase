@@ -1,15 +1,12 @@
-// app/requests/page.tsx
-
-import { getAllRequests } from "@/app/actions/requestActions";
+import { getAllRequests } from "@/app/actions/actions";
 import { RequestCard } from "@/components/RequestCard";
-import { toast } from "sonner";
 import { redirect } from "next/navigation";
 
 export default async function AllRequests() {
   const result = await getAllRequests();
 
   if (!result.success) {
-    toast.error(`Error loading requests: ${result.error}`);
+    console.log(`Error loading requests: ${result.error}`);
     redirect("/");
   }
 

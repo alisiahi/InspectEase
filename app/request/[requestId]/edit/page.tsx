@@ -1,4 +1,4 @@
-import { getInspectionRequest } from "@/app/actions/requestActions";
+import { getInspectionRequest } from "@/app/actions/actions";
 import { InspectionRequestForm } from "@/components/forms/RequestForm";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -14,7 +14,6 @@ const EditRequest = async ({ params }: { params: { requestId: string } }) => {
   const result = await getInspectionRequest(params.requestId);
 
   if (!result.success || !result.data) {
-    toast.error(result.error || "Inspection request not found");
     redirect("/");
   }
 
@@ -22,7 +21,6 @@ const EditRequest = async ({ params }: { params: { requestId: string } }) => {
 
   // Check if the current user is the owner of the request
   if (request.userId !== userId) {
-    toast.error("You do not have permission to edit this request");
     redirect("/");
   }
 

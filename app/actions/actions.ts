@@ -58,6 +58,17 @@ export async function getInspectionRequest(requestId: string) {
             email: true,
           },
         },
+        mission: {
+          include: {
+            inspector: {
+              select: {
+                fullName: true,
+                email: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -95,6 +106,7 @@ export async function updateInspectionRequest(
       where: {
         id: requestId,
         userId: userId,
+        mission: null,
       },
     });
 
@@ -143,6 +155,7 @@ export async function deleteInspectionRequest(requestId: string) {
       where: {
         id: requestId,
         userId: userId,
+        mission: null,
       },
     });
 
@@ -175,11 +188,19 @@ export async function deleteInspectionRequest(requestId: string) {
 export async function getAllRequests() {
   try {
     const requests = await prisma.inspectionRequest.findMany({
+      where: {
+        mission: null, // This filters out requests that have an associated mission
+      },
       include: {
         user: {
           select: {
             fullName: true,
             email: true,
+          },
+        },
+        mission: {
+          select: {
+            id: true,
           },
         },
       },
@@ -219,6 +240,88 @@ export async function getUserRequests() {
     return {
       success: false,
       error: "Failed to fetch your inspection requests",
+    };
+  }
+}
+
+// Accepting a request
+export async function acceptInspectionRequest(requestId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: "User not authenticated" };
+  }
+
+  try {
+    // Check if the request exists and is not already accepted
+    const existingRequest = await prisma.inspectionRequest.findUnique({
+      where: { id: requestId },
+      include: { mission: true },
+    });
+
+    if (!existingRequest) {
+      return { success: false, error: "Inspection request not found" };
+    }
+
+    if (existingRequest.mission) {
+      return {
+        success: false,
+        error: "This request has already been accepted",
+      };
+    }
+
+    // Create a new inspection mission
+    const newMission = await prisma.inspectionMission.create({
+      data: {
+        inspectionRequestId: requestId,
+        inspectorId: userId,
+        status: "PENDING",
+      },
+    });
+
+    revalidatePath(`/request/${requestId}`);
+    return { success: true, data: newMission };
+  } catch (error) {
+    console.error("Failed to accept inspection request:", error);
+    return { success: false, error: "Failed to accept inspection request" };
+  }
+}
+
+// Getting all of the missions of the user
+export async function getUserMissions() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: "User not authenticated" };
+  }
+
+  try {
+    const missions = await prisma.inspectionMission.findMany({
+      where: {
+        inspectorId: userId,
+      },
+      include: {
+        inspectionRequest: {
+          include: {
+            user: {
+              select: {
+                fullName: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return { success: true, data: missions };
+  } catch (error) {
+    console.error("Failed to fetch user's inspection missions:", error);
+    return {
+      success: false,
+      error: "Failed to fetch your inspection missions",
     };
   }
 }
