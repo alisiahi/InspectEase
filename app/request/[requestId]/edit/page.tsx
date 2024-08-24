@@ -1,8 +1,8 @@
 import { getInspectionRequest } from "@/app/actions/actions";
 import { InspectionRequestForm } from "@/components/forms/RequestForm";
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { toast } from "sonner";
 
 const EditRequest = async ({ params }: { params: { requestId: string } }) => {
   const { userId } = auth();
@@ -22,6 +22,11 @@ const EditRequest = async ({ params }: { params: { requestId: string } }) => {
   // Check if the current user is the owner of the request
   if (request.userId !== userId) {
     redirect("/");
+  }
+
+  if (request.mission?.id) {
+    console.log("You can not edit a request on mission.");
+    revalidatePath(`/request/${params.requestId}/edit`);
   }
 
   const initialData = {
