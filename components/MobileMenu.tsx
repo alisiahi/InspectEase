@@ -9,6 +9,7 @@ import {
   SheetTrigger,
   SheetClose,
   SheetTitle,
+  SheetDescription,
 } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { Menu } from "lucide-react";
@@ -60,6 +61,7 @@ export function MobileMenu() {
       </SheetTrigger>
       <SheetContent side="right" className="z-[1000]">
         <SheetTitle>Navigation Menu</SheetTitle>
+        <SheetDescription></SheetDescription>
         <nav className="flex flex-col space-y-4 mt-4">
           <NavLinks onClose={handleClose} />
         </nav>
