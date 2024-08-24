@@ -179,6 +179,7 @@ export async function getAllRequests() {
         user: {
           select: {
             fullName: true,
+            email: true,
           },
         },
       },

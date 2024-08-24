@@ -121,8 +121,8 @@ export function InspectionRequestForm({
                 />
               </FormControl>
               <FormDescription>
-                Click on the map to select the location for inspection. Use the
-                button to center on your location.
+                Click on the map to select the location for inspection. Simply
+                tap on the Map to select your location.
               </FormDescription>
               <FormMessage />
             </FormItem>

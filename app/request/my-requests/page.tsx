@@ -49,6 +49,10 @@ export default async function MyRequests() {
               dateTime={request.dateTime}
               price={request.price}
               requesterName="You"
+              position={[
+                request.latitude as number,
+                request.longitude as number,
+              ]}
             />
           ))}
         </div>

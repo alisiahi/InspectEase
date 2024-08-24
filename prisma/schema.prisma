@@ -20,7 +20,7 @@ model User {
   avatarUrl String? // Optional profile picture
 
   requests InspectionRequest[] // One-to-many relation with InspectionRequest
-  offers   Offer[] // One-to-many relation with Offer
+  missions InspectionMission[] // One-to-many relation with InspectionMission (as inspector)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -38,30 +38,47 @@ model InspectionRequest {
   latitude  Float? // Latitude for the location
   longitude Float? // Longitude for the location
 
-  offers Offer[] // Offers made for this inspection
+  mission InspectionMission? // One-to-one relation with InspectionMission
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Offer {
-  id     String @id @default(cuid())
-  userId String // User who made the offer
-  user   User   @relation(fields: [userId], references: [id])
-
-  inspectionRequestId String // The inspection request the offer is for
+model InspectionMission {
+  id                  String            @id @default(cuid())
+  inspectionRequestId String            @unique // Reference to the InspectionRequest
   inspectionRequest   InspectionRequest @relation(fields: [inspectionRequestId], references: [id])
 
-  price   Float // Offered price
-  message String? // Optional message with the offer
-  status  OfferStatus @default(PENDING) // Status of the offer
+  inspectorId String // User who accepts and performs the inspection
+  inspector   User   @relation(fields: [inspectorId], references: [id])
+
+  photos InspectionPhoto[] // One-to-many relation with InspectionPhoto
+
+  status   MissionStatus   @default(PENDING) // Status of the mission
+  approval ApprovalStatus? // Approved or Rejected status by the requester
+  feedback String? // Optional feedback from the requester
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-enum OfferStatus {
+model InspectionPhoto {
+  id                  String            @id @default(cuid())
+  inspectionMissionId String // Reference to the InspectionMission
+  inspectionMission   InspectionMission @relation(fields: [inspectionMissionId], references: [id])
+
+  url String // URL of the uploaded photo
+
+  createdAt DateTime @default(now())
+}
+
+enum MissionStatus {
   PENDING
-  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ApprovalStatus {
+  APPROVED
   REJECTED
 }

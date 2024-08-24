@@ -19,6 +19,8 @@ interface MapProps {
   selectable?: boolean;
   onLocationSelected?: (lat: number, lng: number) => void;
   showCurrentLocationMarker?: boolean;
+  width?: string;
+  height?: string;
 }
 const Map: React.FC<MapProps> = ({
   initialPosition,
@@ -26,6 +28,8 @@ const Map: React.FC<MapProps> = ({
   selectable = false,
   onLocationSelected,
   showCurrentLocationMarker = true,
+  width = "100%",
+  height = "400px",
 }) => {
   const [position, setPosition] = useState<[number, number]>(
     initialPosition || [51.505, -0.09]
@@ -104,7 +108,7 @@ const Map: React.FC<MapProps> = ({
     <MapContainer
       center={position}
       zoom={13}
-      style={{ height: "400px", width: "100%" }}
+      style={{ height: height, width: width }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

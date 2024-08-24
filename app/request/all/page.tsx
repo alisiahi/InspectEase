@@ -39,7 +39,12 @@ export default async function AllRequests() {
             location={request.location}
             dateTime={request.dateTime}
             price={request.price}
-            requesterName={request.user.fullName}
+            requesterName={
+              request.user.fullName !== ""
+                ? request.user.fullName
+                : request.user.email
+            }
+            position={[request.latitude as number, request.longitude as number]}
           />
         ))}
       </div>

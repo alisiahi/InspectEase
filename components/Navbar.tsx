@@ -53,9 +53,6 @@ export async function Navbar() {
                 <Button variant="secondary" asChild>
                   <Link href="/sign-in">Sign in</Link>
                 </Button>
-                <Button variant="outline" asChild>
-                  <Link href="/sign-up">Sign up</Link>
-                </Button>
               </div>
             )}
             <ModeToggle />
