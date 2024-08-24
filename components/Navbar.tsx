@@ -37,7 +37,7 @@ export function Navbar() {
               </Link>
             </div>
           </div>
-          <div className="sm:ml-6 sm:flex sm:items-center items-center justify-center gap-2">
+          <div className="sm:ml-6 flex  items-center justify-center gap-2">
             {userId ? (
               <UserButton />
             ) : (
