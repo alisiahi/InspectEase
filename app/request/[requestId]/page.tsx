@@ -76,9 +76,17 @@ export default async function RequestPage({
         {userId && userId === request.userId && (
           <div className="mt-6 flex gap-2">
             <Button variant="default" asChild>
-              <Link href={`/request/edit/${request.id}`}>Edit request</Link>
+              <Link href={`/request/${request.id}/edit`}>Edit request</Link>
             </Button>
             <RequestDeleteButton requestId={request.id} />
+          </div>
+        )}
+
+        {userId && userId !== request.userId && (
+          <div className="mt-6 flex gap-2">
+            <Button variant="default" asChild>
+              <Link href={`/request/${request.id}/edit`}>Accept request</Link>
+            </Button>
           </div>
         )}
       </div>

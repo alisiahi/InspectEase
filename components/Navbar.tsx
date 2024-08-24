@@ -37,12 +37,9 @@ export function Navbar() {
               </Link>
             </div>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+          <div className="hidden sm:ml-6 sm:flex sm:items-center items-center justify-center gap-2">
             {userId ? (
-              <div className="flex items-center justify-center gap-2">
-                <UserButton />
-                <ModeToggle />
-              </div>
+              <UserButton />
             ) : (
               <div className="flex items-center justify-center gap-2">
                 <Button variant="secondary" asChild>
@@ -53,6 +50,7 @@ export function Navbar() {
                 </Button>
               </div>
             )}
+            <ModeToggle />
           </div>
         </div>
       </div>

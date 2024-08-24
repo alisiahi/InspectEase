@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "./custom-datepicker.css";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -188,7 +189,8 @@ export function InspectionRequestForm({
                     timeFormat="HH:mm"
                     timeIntervals={15}
                     dateFormat="MMMM d, yyyy h:mm aa"
-                    className="w-full p-2 border rounded react-datepicker-custom"
+                    className="w-full p-2 border rounded"
+                    calendarClassName="custom-datepicker"
                   />
                 </FormControl>
               </div>
