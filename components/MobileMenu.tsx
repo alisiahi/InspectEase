@@ -43,6 +43,15 @@ const NavLinks = ({ onClose }: { onClose: () => void }) => (
         My Missions
       </Link>
     </SheetClose>
+    <SheetClose asChild>
+      <Link
+        href="/my-profile"
+        className="border-transparent text-gray-500 hover:border-primary hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium w-full"
+        onClick={onClose}
+      >
+        My Profile
+      </Link>
+    </SheetClose>
   </>
 );
 
