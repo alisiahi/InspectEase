@@ -52,9 +52,11 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
+
             <CameraProvider>
               <main className="min-h-screen">{children}</main>
             </CameraProvider>
+
             <Footer />
             <Toaster position="top-center" richColors theme="light" />
           </ThemeProvider>
