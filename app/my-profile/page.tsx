@@ -46,6 +46,9 @@ function MyProfile() {
             </Dialog>
           </div>
           {/* Display captured images */}
+          {capturedImages && (
+            <img src={capturedImages[0]} alt="captured image" />
+          )}
         </div>
       </div>
     </main>
