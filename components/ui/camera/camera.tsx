@@ -57,9 +57,9 @@ const Camera: FC<CameraProps> = ({ onClosed, onCapturedImages }) => {
     <div className="z-10 flex min-w-[calc(100vw_-_theme(spacing.4))] flex-1 flex-col ">
       <div className="relative w-full ">
         <div className="absolute z-10 w-full md:h-[calc(93vh_-_theme(spacing.12))] md:w-[20%] ">
-          <div className="relative left-2 top-0">
+          <div className="relative left-2 top-0 p-10">
             <Button
-              className=" rounded-full p-4 opacity-40 hover:opacity-100  "
+              className="rounded-full p-4 opacity-40 hover:opacity-100  "
               size={"icon"}
               variant={images.length > 0 ? "destructive" : "default"}
               onClick={handleOnClosed}
@@ -84,10 +84,10 @@ const Camera: FC<CameraProps> = ({ onClosed, onCapturedImages }) => {
         </div>
 
         <CameraView ref={camera} />
-        <div className="absolute bottom-0 left-[45%] z-20 md:bottom-auto md:left-auto md:right-14 md:top-[50%] ">
+        <div className="absolute bottom-0 left-[45%] z-20 md:bottom-auto md:left-auto md:right-14 md:top-[50%] pr-10">
           <Button
             className={cn(
-              "group h-12 w-12  rounded-full p-8 opacity-40 hover:opacity-100  "
+              " group h-12 w-12  rounded-full p-8 opacity-40 hover:opacity-100  "
             )}
             size={"icon"}
             variant={"default"}
@@ -105,13 +105,13 @@ const Camera: FC<CameraProps> = ({ onClosed, onCapturedImages }) => {
           )}
         >
           {images.length > 0 && (
-            <div className="absolute bottom-0 left-2 md:bottom-auto md:left-auto md:right-14 md:top-0">
+            <div className="absolute bottom-0 left-2 md:bottom-auto md:left-auto md:right-14 md:top-0 p-10">
               <Gallery />
             </div>
           )}
 
           {numberOfCameras > 0 && (
-            <div className="absolute bottom-0 right-6 z-10 md:bottom-0  md:right-14  md:top-auto">
+            <div className="absolute bottom-0 right-6 z-10 md:bottom-0  md:right-14  md:top-auto pr-10">
               <SwitchCamera />
             </div>
           )}
