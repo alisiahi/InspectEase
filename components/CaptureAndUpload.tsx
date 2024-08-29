@@ -88,16 +88,10 @@ const CaptureAndUpload = ({
                   Upload {type.charAt(0).toUpperCase() + type.slice(1)} Picture
                 </DialogTitle>
                 <DialogDescription>
-                  Review your captured image before uploading.
+                  Are you sure about uploading your photo?
                 </DialogDescription>
               </DialogHeader>
-              <div className="mt-4">
-                <img
-                  src={capturedImage}
-                  alt="Captured"
-                  className="w-full rounded-lg shadow-lg"
-                />
-              </div>
+
               <div className="mt-4 flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setShowDialog(false)}>
                   Cancel
