@@ -12,7 +12,6 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 
 import { ourFileRouter } from "@/app/api/uploadthing/core";
-import { CameraProvider } from "@/components/ui/camera/camera-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -53,9 +52,7 @@ export default function RootLayout({
           >
             <Navbar />
 
-            <CameraProvider>
-              <main className="min-h-screen">{children}</main>
-            </CameraProvider>
+            <main className="min-h-screen">{children}</main>
 
             <Footer />
             <Toaster position="top-center" richColors theme="light" />

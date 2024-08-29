@@ -1,58 +1,87 @@
 "use client";
 
 import React, { useState } from "react";
-import Camera from "@/components/ui/camera/camera";
-import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import { UploadIcon, CameraIcon } from "lucide-react";
+import CameraComponent from "@/components/CameraComponent";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-function MyProfile() {
-  const [showDialog, setShowDialog] = useState(false);
-  const [capturedImages, setCapturedImages] = useState<string[]>([]);
+const ProfilePage = () => {
+  const [selfie, setSelfie] = useState<string | null>(null);
+  const [document, setDocument] = useState<string | null>(null);
+
+  const handleSelfieCaptured = (image: string) => {
+    setSelfie(image);
+  };
+
+  const handleDocumentCaptured = (image: string) => {
+    setDocument(image);
+  };
 
   return (
-    <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-      <div className="flex items-center">
-        <h1 className="text-lg font-semibold md:text-2xl">Inventory</h1>
-      </div>
-      <div className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
-        <div className="flex flex-col items-center justify-center space-y-4 p-8">
-          <div className="flex items-center space-x-2">
-            <h3 className="text-lg font-medium">Add product image</h3>
-          </div>
-          <div className="flex items-center justify-center space-x-4">
-            <Dialog
-              open={showDialog}
-              onOpenChange={(open) => setShowDialog(open)}
-            >
-              <DialogTrigger asChild>
-                <Button variant="outline">
-                  <CameraIcon className="mr-2 h-5 w-5" />
-                  Capture Photo
-                  <span className="sr-only">Capture</span>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="h-svh w-svw max-w-full p-0">
-                <Camera
-                  onClosed={() => {
-                    setShowDialog(false);
-                  }}
-                  onCapturedImages={(images) => {
-                    setCapturedImages(images);
-                    setShowDialog(false);
-                  }}
-                />
-              </DialogContent>
-            </Dialog>
-          </div>
-          {/* Display captured images */}
-          {capturedImages && (
-            <img src={capturedImages[0]} alt="captured image" />
-          )}
-        </div>
-      </div>
-    </main>
-  );
-}
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Profile</h1>
 
-export default MyProfile;
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Selfie</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CameraComponent
+              onCapture={handleSelfieCaptured}
+              label="Take a Selfie"
+            />
+            {selfie && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold">Captured Selfie:</h3>
+                <img
+                  src={selfie}
+                  alt="Selfie"
+                  className="mt-2 max-w-full h-auto rounded-lg shadow-md"
+                />
+                <Button
+                  variant="outline"
+                  className="mt-2"
+                  onClick={() => setSelfie(null)}
+                >
+                  Clear Selfie
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Document</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CameraComponent
+              onCapture={handleDocumentCaptured}
+              label="Capture Document"
+            />
+            {document && (
+              <div className="mt-4">
+                <h3 className="text-lg font-semibold">Captured Document:</h3>
+                <img
+                  src={document}
+                  alt="Document"
+                  className="mt-2 max-w-full h-auto rounded-lg shadow-md"
+                />
+                <Button
+                  variant="outline"
+                  className="mt-2"
+                  onClick={() => setDocument(null)}
+                >
+                  Clear Document
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+};
+
+export default ProfilePage;
