@@ -9,41 +9,41 @@ const ProfilePage = () => {
   const [selfie, setSelfie] = useState<string | null>(null);
   const [document, setDocument] = useState<string | null>(null);
 
-  const handleSelfieCaptured = (image: string) => {
+  const handleSelfieCaptured = (image: string | null) => {
     setSelfie(image);
   };
 
-  const handleDocumentCaptured = (image: string) => {
+  const handleDocumentCaptured = (image: string | null) => {
     setDocument(image);
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Profile</h1>
+    <div className="container mx-auto p-4 space-y-8">
+      <h1 className="text-3xl font-bold text-center">Profile</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle>Selfie</CardTitle>
+            <CardTitle className="text-2xl">Selfie</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <CameraComponent
               onCapture={handleSelfieCaptured}
               label="Take a Selfie"
               facingMode="user"
             />
             {selfie && (
-              <div className="mt-4">
+              <div className="space-y-2">
                 <h3 className="text-lg font-semibold">Captured Selfie:</h3>
                 <img
                   src={selfie}
                   alt="Selfie"
-                  className="mt-2 max-w-full h-auto rounded-lg shadow-md"
+                  className="w-full rounded-lg shadow-md"
                 />
                 <Button
                   variant="outline"
-                  className="mt-2"
                   onClick={() => setSelfie(null)}
+                  className="w-full"
                 >
                   Clear Selfie
                 </Button>
@@ -52,28 +52,28 @@ const ProfilePage = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="shadow-lg">
           <CardHeader>
-            <CardTitle>Document</CardTitle>
+            <CardTitle className="text-2xl">Document</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <CameraComponent
               onCapture={handleDocumentCaptured}
               label="Capture Document"
               facingMode="environment"
             />
             {document && (
-              <div className="mt-4">
+              <div className="space-y-2">
                 <h3 className="text-lg font-semibold">Captured Document:</h3>
                 <img
                   src={document}
                   alt="Document"
-                  className="mt-2 max-w-full h-auto rounded-lg shadow-md"
+                  className="w-full rounded-lg shadow-md"
                 />
                 <Button
                   variant="outline"
-                  className="mt-2"
                   onClick={() => setDocument(null)}
+                  className="w-full"
                 >
                   Clear Document
                 </Button>

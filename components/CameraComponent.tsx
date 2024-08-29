@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import { Camera, CameraType } from "react-camera-pro";
+import React, { useState, useRef, useCallback } from "react";
+import Webcam from "react-webcam";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface CameraComponentProps {
-  onCapture: (image: string) => void;
+  onCapture: (image: string | null) => void;
   label: string;
   facingMode: "user" | "environment";
 }
@@ -14,64 +17,78 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   label,
   facingMode,
 }) => {
-  const camera = useRef<CameraType>(null);
-  const [image, setImage] = useState<string | null>(null);
+  const webcamRef = useRef<Webcam>(null);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const capturePhoto = () => {
-    if (camera.current) {
-      const imageSrc = camera.current.takePhoto();
-      if (typeof imageSrc === "string") {
-        setImage(imageSrc);
-        onCapture(imageSrc);
-      } else {
-        // Handle ImageData
-        const canvas = document.createElement("canvas");
-        canvas.width = imageSrc.width;
-        canvas.height = imageSrc.height;
-        const ctx = canvas.getContext("2d");
-        if (ctx) {
-          ctx.putImageData(imageSrc, 0, 0);
-          const dataUrl = canvas.toDataURL("image/jpeg");
-          setImage(dataUrl);
-          onCapture(dataUrl);
-        }
-      }
+  const capture = useCallback(() => {
+    try {
+      const imageSrc = webcamRef.current?.getScreenshot();
+      setCapturedImage(imageSrc || null);
+      onCapture(imageSrc || null);
+      setError(null);
+    } catch (e) {
+      setError("Failed to capture image. Please try again.");
     }
+  }, [webcamRef, onCapture]);
+
+  const retake = () => {
+    setCapturedImage(null);
+    onCapture(null);
+    setError(null);
+  };
+
+  const videoConstraints = {
+    facingMode: facingMode,
   };
 
   return (
-    <div className="flex flex-col items-center">
-      <h2 className="text-xl font-bold mb-4">{label}</h2>
-      <div className="w-full max-w-md aspect-video relative">
-        {!image ? (
-          <Camera
-            ref={camera}
-            aspectRatio={16 / 9}
-            facingMode={facingMode}
-            errorMessages={{
-              noCameraAccessible:
-                "No camera device accessible. Please connect your camera or try a different browser.",
-              permissionDenied:
-                "Permission denied. Please refresh and give camera permission.",
-              switchCamera:
-                "It is not possible to switch camera to different one because there is only one video device accessible.",
-              canvas: "Canvas is not supported.",
-            }}
+    <div className="flex flex-col items-center space-y-4">
+      <h2 className="text-xl font-bold">{label}</h2>
+      <div className="w-full max-w-md aspect-video relative rounded-lg overflow-hidden shadow-lg">
+        {!capturedImage ? (
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
+            videoConstraints={videoConstraints}
+            className="w-full h-full object-cover"
+            onUserMediaError={() =>
+              setError(
+                "Failed to access camera. Please check your permissions."
+              )
+            }
           />
         ) : (
           <img
-            src={image}
-            alt="Captured"
+            src={capturedImage}
+            alt="captured"
             className="w-full h-full object-cover"
           />
         )}
       </div>
-      <button
-        onClick={capturePhoto}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-      >
-        {image ? "Retake" : "Capture"}
-      </button>
+      <div className="flex justify-center">
+        {!capturedImage ? (
+          <Button onClick={capture} className="bg-blue-500 hover:bg-blue-600">
+            Capture
+          </Button>
+        ) : (
+          <Button
+            onClick={retake}
+            variant="outline"
+            className="border-blue-500 text-blue-500 hover:bg-blue-50"
+          >
+            Retake
+          </Button>
+        )}
+      </div>
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 };
