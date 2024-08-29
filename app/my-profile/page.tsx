@@ -5,14 +5,26 @@ import CaptureImage from "@/components/ui/camera/capture-image";
 import { useUploadThing } from "@/lib/uploadthing";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
+import { toast } from "sonner";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const Profile = () => {
+  const [showDialog, setShowDialog] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const { startUpload, isUploading } = useUploadThing("photoUploader");
   const { userId } = useAuth();
 
   const handleImageCaptured = (image: string) => {
     setCapturedImage(image);
+    setShowDialog(true);
   };
 
   const dataURLtoFile = (dataurl: string, filename: string): File => {
@@ -29,38 +41,59 @@ const Profile = () => {
 
   const handleUpload = async () => {
     if (capturedImage && userId) {
-      const filename = `profile-${userId}.jpg`;
+      const filename = `${userId}.jpg`;
       const file = dataURLtoFile(capturedImage, filename);
       try {
         const res = await startUpload([file]);
         console.log("Upload complete:", res);
-        // Handle successful upload (e.g., save URL to user profile)
+        toast.success("Profile picture uploaded successfully!");
+        setCapturedImage(null);
       } catch (error) {
         console.error("Upload error:", error);
-        // Handle upload error
+        toast.error("Failed to upload profile picture. Please try again.");
+      } finally {
+        setShowDialog(false);
       }
     }
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div className="flex flex-col items-center justify-center mx-auto p-4 gap-2">
       <CaptureImage onImageCaptured={handleImageCaptured} />
       {capturedImage && (
-        <div className="mt-4">
-          <h2 className="text-xl font-semibold mb-2">Captured Image:</h2>
-          <img
-            src={capturedImage}
-            alt="Captured"
-            className="max-w-md rounded-lg shadow-lg"
-          />
-          <Button
-            onClick={handleUpload}
-            disabled={isUploading || !userId}
-            className="mt-2"
+        <div className="flex items-center justify-center space-x-4">
+          <Dialog
+            open={showDialog}
+            onOpenChange={(open) => setShowDialog(open)}
           >
-            {isUploading ? "Uploading..." : "Upload to Profile"}
-          </Button>
+            <DialogTrigger className="sr-only"></DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Upload Profile Picture</DialogTitle>
+                <DialogDescription>
+                  Review your captured image before uploading.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-4">
+                <img
+                  src={capturedImage}
+                  alt="Captured"
+                  className="w-full rounded-lg shadow-lg"
+                />
+              </div>
+              <div className="mt-4 flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setShowDialog(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleUpload}
+                  disabled={isUploading || !userId}
+                >
+                  {isUploading ? "Uploading..." : "Upload"}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       )}
     </div>

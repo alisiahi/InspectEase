@@ -68,20 +68,20 @@ const Camera: FC<CameraProps> = ({ onClosed, onCapturedImages }) => {
           </Button>
 
           <Button
-            className="rounded-full p-4 opacity-40 hover:opacity-100 bg-primary disabled:bg-none"
+            className="rounded-full p-4 opacity-40 hover:opacity-100 bg-primary disabled:bg-destructive"
             size={"icon"}
             variant={"secondary"}
             onClick={() => {
               handleOnCapturedImages(images);
             }}
-            disabled={images.length < 0}
+            disabled={images.length <= 0}
           >
             <Check className="fixed h-6 w-6  " />
           </Button>
         </div>
 
         <CameraView ref={camera} />
-        <div className="absolute bottom-4 z-10 w-full flex justify-between">
+        <div className="absolute bottom-6 z-10 w-full flex justify-between">
           <Gallery />
           <Button
             className={cn(
