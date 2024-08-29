@@ -25,7 +25,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   const requestCameraPermission = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode },
+        video: { facingMode: { exact: facingMode } },
       });
       stream.getTracks().forEach((track) => track.stop());
       setHasPermission(true);
@@ -64,7 +64,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   };
 
   const videoConstraints = {
-    facingMode: facingMode,
+    facingMode: { exact: facingMode },
   };
 
   const handleUserMediaError = (err: string | DOMException) => {
