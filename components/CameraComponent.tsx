@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -21,6 +21,27 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const checkCameraAccess = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode },
+        });
+        stream.getTracks().forEach((track) => track.stop());
+        setError(null);
+      } catch (err) {
+        console.error("Camera access error:", err);
+        setError(
+          `Failed to access ${
+            facingMode === "user" ? "front" : "back"
+          } camera. Please check your permissions and device capabilities.`
+        );
+      }
+    };
+
+    checkCameraAccess();
+  }, [facingMode]);
+
   const capture = useCallback(() => {
     try {
       const imageSrc = webcamRef.current?.getScreenshot();
@@ -28,6 +49,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
       onCapture(imageSrc || null);
       setError(null);
     } catch (e) {
+      console.error("Capture error:", e);
       setError("Failed to capture image. Please try again.");
     }
   }, [webcamRef, onCapture]);
@@ -46,33 +68,32 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
     <div className="flex flex-col items-center space-y-4">
       <h2 className="text-xl font-bold">{label}</h2>
       <div className="w-full max-w-md aspect-video relative rounded-lg overflow-hidden shadow-lg">
-        {!capturedImage ? (
+        {!capturedImage && !error ? (
           <Webcam
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
             videoConstraints={videoConstraints}
             className="w-full h-full object-cover"
-            onUserMediaError={() =>
-              setError(
-                "Failed to access camera. Please check your permissions."
-              )
-            }
+            onUserMediaError={(err) => {
+              console.error("Webcam error:", err);
+              setError(`Failed to access camera: ${err.name}`);
+            }}
           />
-        ) : (
+        ) : capturedImage ? (
           <img
             src={capturedImage}
             alt="captured"
             className="w-full h-full object-cover"
           />
-        )}
+        ) : null}
       </div>
       <div className="flex justify-center">
-        {!capturedImage ? (
+        {!capturedImage && !error ? (
           <Button onClick={capture} className="bg-blue-500 hover:bg-blue-600">
             Capture
           </Button>
-        ) : (
+        ) : capturedImage ? (
           <Button
             onClick={retake}
             variant="outline"
@@ -80,7 +101,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
           >
             Retake
           </Button>
-        )}
+        ) : null}
       </div>
       {error && (
         <Alert variant="destructive">
