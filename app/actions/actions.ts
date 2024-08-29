@@ -325,3 +325,79 @@ export async function getUserMissions() {
     };
   }
 }
+
+// User photo upload for itself
+export async function updateUserImage(
+  imageUrl: string,
+  type: "selfie" | "document"
+) {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: "User not authenticated" };
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data:
+        type === "selfie" ? { selfieUrl: imageUrl } : { documentUrl: imageUrl },
+    });
+    revalidatePath("/my-profile");
+    return { success: true, user: updatedUser };
+  } catch (error) {
+    console.error("Failed to update user image:", error);
+    return { success: false, error: "Failed to update user image" };
+  }
+}
+
+// Getting User Verification Status
+export async function getUserVerificationStatus() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: "User not authenticated" };
+  }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        isVerified: true,
+        selfieUrl: true,
+        documentUrl: true,
+      },
+    });
+
+    return {
+      success: true,
+      user: user,
+    };
+  } catch (error) {
+    console.error("Failed to fetch user verification status:", error);
+    return {
+      success: false,
+      error: "Failed to fetch user verification status",
+    };
+  }
+}
+
+// User Verification Request
+export async function requestVerification() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: "User not authenticated" };
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { isVerified: true }, // Mark the user as verified
+    });
+    revalidatePath("/my-profile");
+    return { success: true, user: updatedUser };
+  } catch (error) {
+    console.error("Failed to request verification:", error);
+    return { success: false, error: "Failed to request verification" };
+  }
+}
