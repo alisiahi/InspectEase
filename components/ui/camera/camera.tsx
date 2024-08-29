@@ -54,40 +54,38 @@ const Camera: FC<CameraProps> = ({ onClosed, onCapturedImages }) => {
     handleOnClosed();
   };
   return (
-    <div className="z-10 flex min-w-[calc(100vw_-_theme(spacing.4))] flex-1 flex-col ">
+    <div className="z-10 flex min-w-[calc(100vw_-_theme(spacing.4))] flex-1 flex-col">
       <div className="relative w-full ">
-        <div className="absolute z-10 w-full md:h-[calc(93vh_-_theme(spacing.12))] md:w-[20%] ">
-          <div className="relative left-2 top-0">
-            <Button
-              className=" rounded-full p-4 opacity-40 hover:opacity-100  "
-              size={"icon"}
-              variant={images.length > 0 ? "destructive" : "default"}
-              onClick={handleOnClosed}
-            >
-              <X className="fixed h-6 w-6  " />
-            </Button>
-          </div>
-          {images.length > 0 && (
-            <div className="absolute right-6 top-0 z-10 md:bottom-0  md:left-2 md:right-0 md:top-auto ">
-              <Button
-                className="rounded-full  p-4 opacity-40 hover:opacity-100  "
-                size={"icon"}
-                variant={"secondary"}
-                onClick={() => {
-                  handleOnCapturedImages(images);
-                }}
-              >
-                <Check className="fixed h-6 w-6  " />
-              </Button>
-            </div>
-          )}
+        {/* Everything is inside the div with relative and w-full className */}
+        <div className="absolute top-4 z-10 w-full flex justify-between">
+          <Button
+            className=" rounded-full p-4 opacity-40 hover:opacity-100  "
+            size={"icon"}
+            variant={images.length > 0 ? "destructive" : "default"}
+            onClick={handleOnClosed}
+          >
+            <X className="fixed h-6 w-6  " />
+          </Button>
+
+          <Button
+            className="rounded-full p-4 opacity-40 hover:opacity-100 bg-primary disabled:bg-none"
+            size={"icon"}
+            variant={"secondary"}
+            onClick={() => {
+              handleOnCapturedImages(images);
+            }}
+            disabled={images.length < 0}
+          >
+            <Check className="fixed h-6 w-6  " />
+          </Button>
         </div>
 
         <CameraView ref={camera} />
-        <div className="absolute bottom-0 left-[45%] z-20 md:bottom-auto md:left-auto md:right-14 md:top-[50%] ">
+        <div className="absolute bottom-4 z-10 w-full flex justify-between">
+          <Gallery />
           <Button
             className={cn(
-              "group h-12 w-12  rounded-full p-8 opacity-40 hover:opacity-100  "
+              "group h-12 w-12 rounded-full p-8 opacity-40 hover:opacity-100  "
             )}
             size={"icon"}
             variant={"default"}
@@ -97,24 +95,7 @@ const Camera: FC<CameraProps> = ({ onClosed, onCapturedImages }) => {
           >
             <div className="fixed h-11 w-11 rounded-full bg-primary-foreground group-hover:bg-primary-foreground/60"></div>
           </Button>
-        </div>
-
-        <div
-          className={cn(
-            "absolute z-10 w-full md:right-0 md:top-0  md:h-[calc(93vh_-_theme(spacing.12))] md:w-[20%]"
-          )}
-        >
-          {images.length > 0 && (
-            <div className="absolute bottom-0 left-2 md:bottom-auto md:left-auto md:right-14 md:top-0">
-              <Gallery />
-            </div>
-          )}
-
-          {numberOfCameras > 0 && (
-            <div className="absolute bottom-0 right-6 z-10 md:bottom-0  md:right-14  md:top-auto">
-              <SwitchCamera />
-            </div>
-          )}
+          <SwitchCamera />
         </div>
       </div>
     </div>
@@ -143,7 +124,7 @@ function SwitchCamera() {
         <Button
           variant={"default"}
           size={"icon"}
-          className=" rounded-full   p-4 opacity-40 hover:opacity-100 "
+          className=" rounded-full p-4 opacity-40 hover:opacity-100 "
         >
           <ArrowLeftRight className="fixed h-6 w-6  " />
         </Button>
@@ -181,7 +162,7 @@ function Gallery() {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          className="rounded-full   p-4 opacity-40 hover:opacity-100 "
+          className="rounded-full p-4 opacity-40 hover:opacity-100 "
           size={"icon"}
           variant={"default"}
         >
@@ -191,6 +172,7 @@ function Gallery() {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{images.length} Photos</DialogTitle>
+          <DialogDescription className="sr-only">Description</DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-[calc(80vh-_theme(spacing.16))]">
           <div className="grid grid-cols-2 gap-2  ">
