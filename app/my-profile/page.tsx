@@ -30,6 +30,7 @@ const ProfilePage = () => {
             <CameraComponent
               onCapture={handleSelfieCaptured}
               label="Take a Selfie"
+              facingMode="user"
             />
             {selfie && (
               <div className="mt-4">
@@ -59,6 +60,7 @@ const ProfilePage = () => {
             <CameraComponent
               onCapture={handleDocumentCaptured}
               label="Capture Document"
+              facingMode="environment"
             />
             {document && (
               <div className="mt-4">

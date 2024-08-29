@@ -6,11 +6,13 @@ import { Camera, CameraType } from "react-camera-pro";
 interface CameraComponentProps {
   onCapture: (image: string) => void;
   label: string;
+  facingMode: "user" | "environment";
 }
 
 const CameraComponent: React.FC<CameraComponentProps> = ({
   onCapture,
   label,
+  facingMode,
 }) => {
   const camera = useRef<CameraType>(null);
   const [image, setImage] = useState<string | null>(null);
@@ -45,6 +47,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
           <Camera
             ref={camera}
             aspectRatio={16 / 9}
+            facingMode={facingMode}
             errorMessages={{
               noCameraAccessible:
                 "No camera device accessible. Please connect your camera or try a different browser.",
