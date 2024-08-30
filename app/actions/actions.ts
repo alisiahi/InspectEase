@@ -381,7 +381,39 @@ export async function getUserVerificationStatus() {
   }
 }
 
-// User Verification Request
+////////////////////////////////////////////////////////////////////////////////////////
+// Function to verify face match
+async function verifyFaceMatch(
+  selfieUrl: string,
+  documentUrl: string
+): Promise<boolean> {
+  try {
+    const response = await fetch(
+      "https://face-verification-service.liara.run/verify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          selfie_url: selfieUrl,
+          id_card_url: documentUrl,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Face verification service error");
+    }
+
+    const result = await response.json();
+    return result.match;
+  } catch (error) {
+    console.error("Error verifying face match:", error);
+    throw error;
+  }
+}
+
 export async function requestVerification() {
   const { userId } = auth();
 
@@ -390,10 +422,41 @@ export async function requestVerification() {
   }
 
   try {
+    // Fetch user data
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { selfieUrl: true, documentUrl: true, isVerified: true },
+    });
+
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+
+    if (user.isVerified) {
+      return { success: false, error: "User is already verified" };
+    }
+
+    if (!user.selfieUrl || !user.documentUrl) {
+      return { success: false, error: "Selfie or ID document missing" };
+    }
+
+    // Verify face match
+    const isMatch = await verifyFaceMatch(user.selfieUrl, user.documentUrl);
+
+    if (!isMatch) {
+      return {
+        success: false,
+        error:
+          "Face verification failed. The selfie does not match the ID document.",
+      };
+    }
+
+    // Update user verification status
     const updatedUser = await prisma.user.update({
       where: { id: userId },
-      data: { isVerified: true }, // Mark the user as verified
+      data: { isVerified: true },
     });
+
     revalidatePath("/my-profile");
     return { success: true, user: updatedUser };
   } catch (error) {
@@ -401,3 +464,5 @@ export async function requestVerification() {
     return { success: false, error: "Failed to request verification" };
   }
 }
+
+////////////////////////////////////////////////////////////////////////////////////////
