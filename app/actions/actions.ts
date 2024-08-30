@@ -396,8 +396,8 @@ async function verifyFaceMatch(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          selfie_url: selfieUrl,
-          id_card_url: documentUrl,
+          id_url: selfieUrl,
+          selfie_url: documentUrl,
         }),
       }
     );
@@ -407,7 +407,11 @@ async function verifyFaceMatch(
     }
 
     const result = await response.json();
-    return result.match;
+
+    console.log(result);
+
+    if (result.match) return true;
+    else return false;
   } catch (error) {
     console.error("Error verifying face match:", error);
     throw error;
