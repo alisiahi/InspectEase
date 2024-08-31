@@ -446,6 +446,11 @@ export async function requestVerification() {
       return { success: false, error: "Selfie or ID document missing" };
     }
 
+    await prisma.user.update({
+      where: { id: userId },
+      data: { verificationStatus: "PENDING" },
+    });
+
     const requestSent = await sendVerificationRequest(
       userId,
       user.selfieUrl,
@@ -455,11 +460,6 @@ export async function requestVerification() {
     if (!requestSent) {
       return { success: false, error: "Failed to send verification request" };
     }
-
-    await prisma.user.update({
-      where: { id: userId },
-      data: { verificationStatus: "PENDING" },
-    });
 
     revalidatePath("/my-profile");
     return { success: true, message: "Verification request sent successfully" };
