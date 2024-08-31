@@ -402,7 +402,6 @@ async function sendVerificationRequest(
       }),
     });
 
-    console.log(response);
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Verification request failed:", response.status, errorText);
@@ -450,7 +449,15 @@ export async function requestVerification() {
       data: { verificationStatus: "PENDING" },
     });
 
-    await sendVerificationRequest(userId, user.selfieUrl, user.documentUrl);
+    const requestSent = await sendVerificationRequest(
+      userId,
+      user.selfieUrl,
+      user.documentUrl
+    );
+
+    if (!requestSent) {
+      return { success: false, error: "Failed to send verification request" };
+    }
 
     revalidatePath("/my-profile");
     return { success: true, message: "Verification request sent successfully" };
