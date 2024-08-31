@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id          String  @id @default(cuid()) // Clerk user ID
-  email       String  @unique
-  fullName    String
-  avatarUrl   String? // Optional profile picture
-  selfieUrl   String? // URL of the user's selfie
-  documentUrl String? // URL of the user's ID document
-  isVerified  Boolean @default(false) // Verification status
+  id                 String             @id @default(cuid()) // Clerk user ID
+  email              String             @unique
+  fullName           String
+  avatarUrl          String? // Optional profile picture
+  selfieUrl          String? // URL of the user's selfie
+  documentUrl        String? // URL of the user's ID document
+  verificationStatus VerificationStatus @default(NOT_VERIFIED)
 
   requests InspectionRequest[] // One-to-many relation with InspectionRequest
   missions InspectionMission[] // One-to-many relation with InspectionMission (as inspector)
@@ -84,4 +84,10 @@ enum MissionStatus {
 enum ApprovalStatus {
   APPROVED
   REJECTED
+}
+
+enum VerificationStatus {
+  NOT_VERIFIED
+  PENDING
+  VERIFIED
 }

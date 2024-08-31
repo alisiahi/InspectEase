@@ -362,7 +362,7 @@ export async function getUserVerificationStatus() {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
-        isVerified: true,
+        verificationStatus: true,
         selfieUrl: true,
         documentUrl: true,
       },
@@ -383,38 +383,33 @@ export async function getUserVerificationStatus() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Function to verify face match
-async function verifyFaceMatch(
+async function sendVerificationRequest(
+  userId: string,
   selfieUrl: string,
   documentUrl: string
-): Promise<boolean> {
+) {
   try {
-    const response = await fetch(
-      "https://face-verification-service.liara.run/verify",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id_url: selfieUrl,
-          selfie_url: documentUrl,
-        }),
-      }
-    );
+    const response = await fetch(`${process.env.FASTAPI_URL}/verify`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": process.env.FASTAPI_API_KEY!, // Use the API key
+      },
+      body: JSON.stringify({
+        userId,
+        selfie_url: selfieUrl,
+        id_url: documentUrl,
+      }),
+    });
 
     if (!response.ok) {
-      throw new Error("Face verification service error");
+      throw new Error("Failed to send verification request");
     }
 
-    const result = await response.json();
-
-    console.log(result);
-
-    if (result.match) return true;
-    else return false;
+    return true;
   } catch (error) {
-    console.error("Error verifying face match:", error);
-    throw error;
+    console.error("Error sending verification request:", error);
+    return false;
   }
 }
 
@@ -426,47 +421,47 @@ export async function requestVerification() {
   }
 
   try {
-    // Fetch user data
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { selfieUrl: true, documentUrl: true, isVerified: true },
+      select: { selfieUrl: true, documentUrl: true, verificationStatus: true },
     });
 
     if (!user) {
       return { success: false, error: "User not found" };
     }
 
-    if (user.isVerified) {
+    if (user.verificationStatus === "VERIFIED") {
       return { success: false, error: "User is already verified" };
+    }
+
+    if (user.verificationStatus === "PENDING") {
+      return { success: false, error: "Verification is already in progress" };
     }
 
     if (!user.selfieUrl || !user.documentUrl) {
       return { success: false, error: "Selfie or ID document missing" };
     }
 
-    // Verify face match
-    const isMatch = await verifyFaceMatch(user.selfieUrl, user.documentUrl);
+    const requestSent = await sendVerificationRequest(
+      userId,
+      user.selfieUrl,
+      user.documentUrl
+    );
 
-    if (!isMatch) {
-      return {
-        success: false,
-        error:
-          "Face verification failed. The selfie does not match the ID document.",
-      };
+    if (!requestSent) {
+      return { success: false, error: "Failed to send verification request" };
     }
 
-    // Update user verification status
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: userId },
-      data: { isVerified: true },
+      data: { verificationStatus: "PENDING" },
     });
 
     revalidatePath("/my-profile");
-    return { success: true, user: updatedUser };
+    return { success: true, message: "Verification request sent successfully" };
   } catch (error) {
     console.error("Failed to request verification:", error);
     return { success: false, error: "Failed to request verification" };
   }
 }
-
 ////////////////////////////////////////////////////////////////////////////////////////

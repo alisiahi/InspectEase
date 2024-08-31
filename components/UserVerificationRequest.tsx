@@ -13,7 +13,9 @@ const UserVerificationRequest = () => {
     try {
       const result = await requestVerification();
       if (result.success) {
-        toast.success("Verification request submitted successfully!");
+        toast.success(
+          "Verification request submitted successfully! Please wait while we process your request."
+        );
       } else {
         toast.error(
           result.error ||
