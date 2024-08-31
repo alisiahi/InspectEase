@@ -450,15 +450,7 @@ export async function requestVerification() {
       data: { verificationStatus: "PENDING" },
     });
 
-    const requestSent = await sendVerificationRequest(
-      userId,
-      user.selfieUrl,
-      user.documentUrl
-    );
-
-    if (!requestSent) {
-      return { success: false, error: "Failed to send verification request" };
-    }
+    await sendVerificationRequest(userId, user.selfieUrl, user.documentUrl);
 
     revalidatePath("/my-profile");
     return { success: true, message: "Verification request sent successfully" };
