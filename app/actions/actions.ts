@@ -388,6 +388,8 @@ async function sendVerificationRequest(
   selfieUrl: string,
   documentUrl: string
 ) {
+  console.log("FASTAPI_API_KEY:", process.env.FASTAPI_API_KEY);
+  console.log("FASTAPI_API_KEY:", process.env.FASTAPI_URL);
   try {
     const response = await fetch(`${process.env.FASTAPI_URL}/verify`, {
       method: "POST",
@@ -403,6 +405,8 @@ async function sendVerificationRequest(
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Verification request failed:", response.status, errorText);
       throw new Error("Failed to send verification request");
     }
 
