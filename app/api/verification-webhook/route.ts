@@ -19,6 +19,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
     }
 
+    console.log(isVerified);
     await prisma.user.update({
       where: { id: userId },
       data: { verificationStatus: isVerified ? "VERIFIED" : "NOT_VERIFIED" },
