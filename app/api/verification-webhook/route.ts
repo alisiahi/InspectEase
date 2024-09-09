@@ -4,13 +4,6 @@ import prisma from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
-  const headersList = headers();
-  const apiKey = headersList.get("x-api-key");
-
-  if (apiKey !== process.env.FASTAPI_API_KEY) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
     const body = await req.json();
     const { userId, isVerified } = body;

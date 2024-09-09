@@ -393,7 +393,6 @@ async function sendVerificationRequest(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": process.env.NEXTJS_API_KEY!, // Use the API key
       },
       body: JSON.stringify({
         userId,
