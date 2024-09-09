@@ -5,6 +5,13 @@ import { revalidatePath } from "next/cache";
 
 export async function POST(req: Request) {
   try {
+    const headersList = headers();
+    const apiKey = headersList.get("X-API-Key");
+
+    if (apiKey !== process.env.FASTAPI_API_KEY) {
+      return NextResponse.json({ error: "Invalid API Key" }, { status: 403 });
+    }
+
     const body = await req.json();
     const { userId, isVerified } = body;
 

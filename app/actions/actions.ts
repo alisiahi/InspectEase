@@ -7,6 +7,7 @@ import {
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 
 // Creating an inspection request
 export async function createInspectionRequest(
@@ -383,16 +384,21 @@ export async function getUserVerificationStatus() {
 
 ////////////////////////////////////////////////////////////////////////////////////////
 // Function to verify face match
+
 async function sendVerificationRequest(
   userId: string,
   selfieUrl: string,
   documentUrl: string
 ) {
   try {
+    const apiKey = process.env.NEXTJS_API_KEY;
+    console.log("Sending request with API Key:", apiKey);
+
     const response = await fetch(`${process.env.FASTAPI_URL}/verify`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-API-Key": process.env.NEXTJS_API_KEY as string,
       },
       body: JSON.stringify({
         userId,
