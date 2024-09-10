@@ -57,6 +57,12 @@ const UserVerificationRequest = () => {
     );
   }
 
+  if (countdown === 0) {
+    <Button className="mt-6" onClick={revalidateAction}>
+      Try again
+    </Button>;
+  }
+
   return (
     <Button
       className="mt-6"
