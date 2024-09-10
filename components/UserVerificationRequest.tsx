@@ -51,7 +51,7 @@ const UserVerificationRequest = () => {
     }
   };
 
-  if (countdown !== null) {
+  if (countdown !== 0) {
     return (
       <div className="mt-6">
         <p>Verification process ends in {countdown} seconds...</p>
