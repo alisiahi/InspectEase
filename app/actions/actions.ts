@@ -500,3 +500,7 @@ export async function requestResetImages() {
     return { success: false, error: "Failed to reset images" };
   }
 }
+/////////////////////////////////////////
+export async function revalidateAction(path: string) {
+  revalidatePath(path);
+}

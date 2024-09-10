@@ -1,15 +1,20 @@
 "use client";
 
-import { requestVerification } from "@/app/actions/actions";
+import { requestVerification, revalidateAction } from "@/app/actions/actions";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const UserVerificationRequest = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
   const router = useRouter();
+
+  const handleRevalidate = async () => {
+    await revalidateAction("/my-profile");
+  };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -18,7 +23,7 @@ const UserVerificationRequest = () => {
         setCountdown(countdown - 1);
       }, 1000);
     } else if (countdown === 0) {
-      router.push("/my-profile");
+      handleRevalidate();
     }
     return () => clearTimeout(timer);
   }, [countdown, router]);
