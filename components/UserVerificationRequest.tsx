@@ -24,6 +24,7 @@ const UserVerificationRequest = () => {
       }, 1000);
     } else if (countdown === 0) {
       handleRevalidate();
+      router.refresh();
     }
     return () => clearTimeout(timer);
   }, [countdown, router]);
