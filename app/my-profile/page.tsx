@@ -18,6 +18,14 @@ const MyProfile = async () => {
 
   return (
     <div className="container mx-auto p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>This Button is Here mainly for testing</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ResetImages />
+        </CardContent>
+      </Card>
       <h1 className="text-3xl font-bold mb-6">My Profile</h1>
       {user?.verificationStatus === "VERIFIED" ? (
         <p className="text-green-600 font-semibold">

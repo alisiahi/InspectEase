@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 const UserVerificationRequest = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +12,7 @@ const UserVerificationRequest = () => {
   const router = useRouter();
 
   const handleRevalidate = async () => {
-    await revalidateAction("/my-profile");
+    await revalidateAction();
   };
 
   useEffect(() => {
@@ -24,7 +23,6 @@ const UserVerificationRequest = () => {
       }, 1000);
     } else if (countdown === 0) {
       handleRevalidate();
-      router.refresh();
     }
     return () => clearTimeout(timer);
   }, [countdown, router]);

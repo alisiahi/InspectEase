@@ -501,6 +501,6 @@ export async function requestResetImages() {
   }
 }
 /////////////////////////////////////////
-export async function revalidateAction(path: string) {
-  revalidatePath(path);
+export async function revalidateAction() {
+  revalidatePath("/my-profile");
 }
