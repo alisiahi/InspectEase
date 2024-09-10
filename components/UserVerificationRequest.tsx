@@ -9,23 +9,43 @@ import { useRouter } from "next/navigation";
 const UserVerificationRequest = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [countdown, setCountdown] = useState<number | null>(null);
+  const [retryCount, setRetryCount] = useState(0); // Retry counter
   const router = useRouter();
 
   const handleRevalidate = async () => {
-    await revalidateAction();
+    try {
+      await revalidateAction();
+      router.refresh(); // Force page refresh after revalidation
+    } catch (error) {
+      console.error("Revalidation failed:", error);
+    }
   };
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (countdown !== null && countdown > 0) {
       timer = setTimeout(() => {
         setCountdown(countdown - 1);
       }, 1000);
     } else if (countdown === 0) {
       handleRevalidate();
+
+      // Retry logic if verification is still not successful
+      const interval = setInterval(async () => {
+        setRetryCount((prev) => prev + 1);
+        await handleRevalidate();
+
+        // Stop polling after 5 retries (or any limit you want)
+        if (retryCount >= 5) {
+          clearInterval(interval);
+        }
+      }, 5000); // Poll every 5 seconds
+      return () => clearInterval(interval);
     }
+
     return () => clearTimeout(timer);
-  }, [countdown, router]);
+  }, [countdown, retryCount, router]);
 
   const handleVerificationRequest = async () => {
     setIsLoading(true);
