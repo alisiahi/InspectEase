@@ -27,9 +27,19 @@ const ResetImages = () => {
   };
 
   return (
-    <Button className="mt-6" onClick={handleResetRequest} disabled={isLoading}>
-      {isLoading ? "Processing..." : "Reset your images"}
-    </Button>
+    <div className="flex flex-col gap-2">
+      <p>
+        The result of your verification request is FAILED. You can remove your
+        images and try again.
+      </p>
+      <Button
+        className="mt-6"
+        onClick={handleResetRequest}
+        disabled={isLoading}
+      >
+        {isLoading ? "Processing..." : "Reset your images"}
+      </Button>
+    </div>
   );
 };
 

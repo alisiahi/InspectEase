@@ -48,7 +48,7 @@ const UserVerificationRequest = () => {
   if (countdown !== null) {
     return (
       <div className="mt-6">
-        <p>Refreshing in {countdown} seconds...</p>
+        <p>Verification process ends in {countdown} seconds...</p>
       </div>
     );
   }
