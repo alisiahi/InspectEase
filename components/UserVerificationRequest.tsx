@@ -3,10 +3,25 @@
 import { requestVerification } from "@/app/actions/actions";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const UserVerificationRequest = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const [countdown, setCountdown] = useState<number | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (countdown !== null && countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+    } else if (countdown === 0) {
+      router.refresh();
+    }
+    return () => clearTimeout(timer);
+  }, [countdown, router]);
 
   const handleVerificationRequest = async () => {
     setIsLoading(true);
@@ -16,6 +31,7 @@ const UserVerificationRequest = () => {
         toast.success(
           "Verification request submitted successfully! Please wait while we process your request."
         );
+        setCountdown(30); // Start the countdown
       } else {
         toast.error(
           result.error ||
@@ -28,6 +44,14 @@ const UserVerificationRequest = () => {
       setIsLoading(false);
     }
   };
+
+  if (countdown !== null) {
+    return (
+      <div className="mt-6">
+        <p>Refreshing in {countdown} seconds...</p>
+      </div>
+    );
+  }
 
   return (
     <Button

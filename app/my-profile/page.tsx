@@ -24,8 +24,6 @@ const MyProfile = async () => {
         <p className="text-green-600 font-semibold">
           Your account is verified.
         </p>
-      ) : user?.verificationStatus === "PENDING" ? (
-        <PendingStatus />
       ) : user?.verificationStatus === "FAILED" ? (
         <ResetImages />
       ) : (
@@ -55,7 +53,10 @@ const MyProfile = async () => {
       {user?.selfieUrl &&
         user?.documentUrl &&
         user?.verificationStatus === "NOT_VERIFIED" && (
-          <UserVerificationRequest />
+          <>
+            <UserVerificationRequest />
+            <ResetImages />
+          </>
         )}
     </div>
   );
