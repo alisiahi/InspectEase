@@ -14,6 +14,7 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const { userId, isVerified } = body;
+    console.log("This is the result which received in next.js app", isVerified);
 
     if (!userId || typeof isVerified !== "boolean") {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
