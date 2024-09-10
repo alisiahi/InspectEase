@@ -4,9 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CaptureAndUpload from "@/components/CaptureAndUpload";
 import { getUserVerificationStatus } from "@/app/actions/actions";
 import UserVerificationRequest from "@/components/UserVerificationRequest";
-import { Button } from "@/components/ui/button";
+
 import ResetImages from "@/components/ResetImages";
-import PendingStatus from "@/components/PendingState";
 
 const MyProfile = async () => {
   const { userId } = auth();
