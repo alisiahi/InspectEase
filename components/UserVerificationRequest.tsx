@@ -18,7 +18,7 @@ const UserVerificationRequest = () => {
         setCountdown(countdown - 1);
       }, 1000);
     } else if (countdown === 0) {
-      router.refresh();
+      router.push("/my-profile");
     }
     return () => clearTimeout(timer);
   }, [countdown, router]);
