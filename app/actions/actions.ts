@@ -480,10 +480,6 @@ export async function requestResetImages() {
       return { success: false, error: "User not found" };
     }
 
-    if (user.verificationStatus === "VERIFIED") {
-      return { success: false, error: "User is already verified" };
-    }
-
     await prisma.user.update({
       where: { id: userId },
       data: {
