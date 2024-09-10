@@ -52,10 +52,7 @@ const MyProfile = async () => {
       {user?.selfieUrl &&
         user?.documentUrl &&
         user?.verificationStatus === "NOT_VERIFIED" && (
-          <>
-            <UserVerificationRequest />
-            <ResetImages />
-          </>
+          <UserVerificationRequest />
         )}
     </div>
   );
