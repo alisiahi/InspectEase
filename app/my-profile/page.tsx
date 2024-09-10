@@ -6,6 +6,7 @@ import { getUserVerificationStatus } from "@/app/actions/actions";
 import UserVerificationRequest from "@/components/UserVerificationRequest";
 import { Button } from "@/components/ui/button";
 import ResetImages from "@/components/ResetImages";
+import PendingStatus from "@/components/PendingState";
 
 const MyProfile = async () => {
   const { userId } = auth();
@@ -24,9 +25,7 @@ const MyProfile = async () => {
           Your account is verified.
         </p>
       ) : user?.verificationStatus === "PENDING" ? (
-        <p className="text-yellow-600 font-semibold">
-          Your verification is in progress. Please check back later.
-        </p>
+        <PendingStatus />
       ) : user?.verificationStatus === "FAILED" ? (
         <ResetImages />
       ) : (
