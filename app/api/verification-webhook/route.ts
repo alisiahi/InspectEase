@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 
     const res = await prisma.user.update({
       where: { id: userId },
-      data: { verificationStatus: isVerified ? "VERIFIED" : "NOT_VERIFIED" },
+      data: { verificationStatus: isVerified ? "VERIFIED" : "FAILED" },
     });
 
     revalidatePath("/my-profile");

@@ -472,3 +472,40 @@ export async function requestVerification() {
   }
 }
 ////////////////////////////////////////////////////////////////////////////////////////
+export async function requestResetImages() {
+  const { userId } = auth();
+
+  if (!userId) {
+    return { success: false, error: "User not authenticated" };
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { selfieUrl: true, documentUrl: true, verificationStatus: true },
+    });
+
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+
+    if (user.verificationStatus === "VERIFIED") {
+      return { success: false, error: "User is already verified" };
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        verificationStatus: "NOT_VERIFIED",
+        selfieUrl: null,
+        documentUrl: null,
+      },
+    });
+
+    revalidatePath("/my-profile");
+    return { success: true, message: "Images are reset successfully" };
+  } catch (error) {
+    console.error("Failed to reset images:", error);
+    return { success: false, error: "Failed to reset images" };
+  }
+}

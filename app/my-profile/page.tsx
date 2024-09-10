@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import CaptureAndUpload from "@/components/CaptureAndUpload";
 import { getUserVerificationStatus } from "@/app/actions/actions";
 import UserVerificationRequest from "@/components/UserVerificationRequest";
+import { Button } from "@/components/ui/button";
+import ResetImages from "@/components/ResetImages";
 
 const MyProfile = async () => {
   const { userId } = auth();
@@ -25,6 +27,8 @@ const MyProfile = async () => {
         <p className="text-yellow-600 font-semibold">
           Your verification is in progress. Please check back later.
         </p>
+      ) : user?.verificationStatus === "FAILED" ? (
+        <ResetImages />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {!user?.selfieUrl && (
