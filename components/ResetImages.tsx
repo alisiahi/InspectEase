@@ -8,7 +8,7 @@ import { requestResetImages } from "@/app/actions/actions";
 const ResetImages = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleVerificationRequest = async () => {
+  const handleResetRequest = async () => {
     setIsLoading(true);
     try {
       const result = await requestResetImages();
@@ -27,12 +27,8 @@ const ResetImages = () => {
   };
 
   return (
-    <Button
-      className="mt-6"
-      onClick={handleVerificationRequest}
-      disabled={isLoading}
-    >
-      {isLoading ? "Processing..." : "Reset you images"}
+    <Button className="mt-6" onClick={handleResetRequest} disabled={isLoading}>
+      {isLoading ? "Processing..." : "Reset your images"}
     </Button>
   );
 };

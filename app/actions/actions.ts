@@ -441,10 +441,6 @@ export async function requestVerification() {
       return { success: false, error: "User is already verified" };
     }
 
-    if (user.verificationStatus === "PENDING") {
-      return { success: false, error: "Verification is already in progress" };
-    }
-
     if (!user.selfieUrl || !user.documentUrl) {
       return { success: false, error: "Selfie or ID document missing" };
     }
