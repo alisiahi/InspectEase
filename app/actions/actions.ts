@@ -498,7 +498,6 @@ export async function requestResetImages() {
 }
 /////////////////////////////////////////
 export async function revalidateAction({ userId }: { userId: string }) {
-  revalidatePath("/my-profile");
   await prisma.user.update({
     where: { id: userId },
     data: { verificationStatus: "PENDING" },
