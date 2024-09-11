@@ -454,10 +454,6 @@ export async function requestVerification() {
     if (!requestSent) {
       return { success: false, error: "Failed to send verification request" };
     }
-    await prisma.user.update({
-      where: { id: userId },
-      data: { verificationStatus: "PENDING" },
-    });
 
     revalidatePath("/my-profile");
     return { success: true, message: "Verification request sent successfully" };
@@ -501,6 +497,10 @@ export async function requestResetImages() {
   }
 }
 /////////////////////////////////////////
-export async function revalidateAction() {
+export async function revalidateAction({ userId }: { userId: string }) {
   revalidatePath("/my-profile");
+  await prisma.user.update({
+    where: { id: userId },
+    data: { verificationStatus: "PENDING" },
+  });
 }

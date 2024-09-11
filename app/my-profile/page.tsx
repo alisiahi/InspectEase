@@ -36,7 +36,7 @@ const MyProfile = async () => {
       ) : user?.verificationStatus === "PENDING" ? (
         <div className="flex flex-col gap-2">
           <p>Try again and send another verification reuquest</p>
-          <UserVerificationRequest />
+          <UserVerificationRequest userId={userId} />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -65,7 +65,7 @@ const MyProfile = async () => {
       {user?.selfieUrl &&
         user?.documentUrl &&
         user?.verificationStatus === "NOT_VERIFIED" && (
-          <UserVerificationRequest />
+          <UserVerificationRequest userId={userId} />
         )}
     </div>
   );
