@@ -25,7 +25,7 @@ const UserVerificationRequest = ({ userId }: { userId: string }) => {
 
         // Refresh the page when countdown reaches 0
         if (countdown === 0) {
-          router.refresh();
+          router.push("/my-profile");
         }
       }, 1000);
     }
