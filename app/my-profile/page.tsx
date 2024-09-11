@@ -6,6 +6,7 @@ import { getUserVerificationStatus } from "@/app/actions/actions";
 import UserVerificationRequest from "@/components/UserVerificationRequest";
 
 import ResetImages from "@/components/ResetImages";
+import PendingVerification from "@/components/PendingVerification";
 
 const MyProfile = async () => {
   const { userId } = auth();
@@ -33,6 +34,8 @@ const MyProfile = async () => {
         </p>
       ) : user?.verificationStatus === "FAILED" ? (
         <ResetImages />
+      ) : user?.verificationStatus === "PENDING" ? (
+        <PendingVerification />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {!user?.selfieUrl && (
