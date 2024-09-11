@@ -501,3 +501,11 @@ export async function requestResetImages() {
   }
 }
 /////////////////////////////////////////
+
+export async function TryAgainVerification({ userId }: { userId: string }) {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { verificationStatus: "NOT_VERIFIED" },
+  });
+  revalidatePath("/my-profile");
+}

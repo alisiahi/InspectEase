@@ -35,7 +35,7 @@ const MyProfile = async () => {
       ) : user?.verificationStatus === "FAILED" ? (
         <ResetImages />
       ) : user?.verificationStatus === "PENDING" ? (
-        <PendingVerification />
+        <PendingVerification userId={userId} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {!user?.selfieUrl && (
