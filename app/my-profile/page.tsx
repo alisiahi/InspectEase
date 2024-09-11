@@ -33,6 +33,11 @@ const MyProfile = async () => {
         </p>
       ) : user?.verificationStatus === "FAILED" ? (
         <ResetImages />
+      ) : user?.verificationStatus === "PENDING" ? (
+        <div className="flex flex-col gap-2">
+          <p>Try again and send another verification reuquest</p>
+          <UserVerificationRequest />
+        </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {!user?.selfieUrl && (
