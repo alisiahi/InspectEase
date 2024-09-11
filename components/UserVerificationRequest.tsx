@@ -1,3 +1,5 @@
+"use client";
+
 import { requestVerification } from "@/app/actions/actions";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
