@@ -513,7 +513,10 @@ export async function TryAgainVerification({ userId }: { userId: string }) {
 export async function checkingStatusDuringTimer() {
   const { user } = await getUserVerificationStatus();
 
-  if (user?.verificationStatus === "VERIFIED") {
+  if (
+    user?.verificationStatus === "VERIFIED" ||
+    user?.verificationStatus === "FAILED"
+  ) {
     revalidatePath("/my-profile");
   }
 }
