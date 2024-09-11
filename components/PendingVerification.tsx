@@ -27,6 +27,11 @@ const PendingVerification = ({ userId }: { userId: string }) => {
       if (countdown % 5 === 0) {
         checkStatus();
       }
+
+      if (countdown === 0) {
+        checkStatus();
+      }
+
       return () => clearInterval(timer);
     }
   }, [countdown]);
