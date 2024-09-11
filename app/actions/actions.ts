@@ -455,7 +455,6 @@ export async function requestVerification() {
       return { success: false, error: "Failed to send verification request" };
     }
 
-    revalidatePath("/my-profile");
     await prisma.user.update({
       where: { id: userId },
       data: { verificationStatus: "PENDING" },
