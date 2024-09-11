@@ -509,3 +509,11 @@ export async function TryAgainVerification({ userId }: { userId: string }) {
   });
   revalidatePath("/my-profile");
 }
+
+export async function checkingStatusDuringTimer() {
+  const { user } = await getUserVerificationStatus();
+
+  if (user?.verificationStatus === "VERIFIED") {
+    revalidatePath("/my-profile");
+  }
+}

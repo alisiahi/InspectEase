@@ -1,6 +1,9 @@
 "use client";
 
-import { TryAgainVerification } from "@/app/actions/actions";
+import {
+  checkingStatusDuringTimer,
+  TryAgainVerification,
+} from "@/app/actions/actions";
 import { useState, useEffect } from "react";
 import { Button } from "./ui/button";
 
@@ -11,6 +14,10 @@ const PendingVerification = ({ userId }: { userId: string }) => {
     await TryAgainVerification({ userId });
   }
 
+  async function checkStatus() {
+    await checkingStatusDuringTimer();
+  }
+
   useEffect(() => {
     if (countdown > 0) {
       const timer = setInterval(() => {
@@ -18,6 +25,9 @@ const PendingVerification = ({ userId }: { userId: string }) => {
       }, 1000);
 
       return () => clearInterval(timer);
+    }
+    if (countdown % 5 === 0) {
+      checkStatus();
     }
   }, [countdown]);
 
