@@ -16,6 +16,7 @@ const UserVerificationRequest = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const handleVerificationRequest = async () => {
+    setIsLoading(true);
     try {
       const result = await requestVerification();
       if (result.success) {

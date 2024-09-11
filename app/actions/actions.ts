@@ -459,6 +459,7 @@ export async function requestVerification() {
       where: { id: userId },
       data: { verificationStatus: "PENDING" },
     });
+    revalidatePath("/my-profile");
     return { success: true, message: "Verification request sent successfully" };
   } catch (error) {
     console.error("Failed to request verification:", error);
